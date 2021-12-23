@@ -1,0 +1,2 @@
+Test read of file open, still line one, yes even now
+Line two.

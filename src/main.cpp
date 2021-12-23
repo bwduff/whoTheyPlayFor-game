@@ -5,18 +5,24 @@
  * LICENSE: GNU GPLv3
  */
 
-#include <cstdio.h>
+#include <iostream>
+#include <vector>
+#include <string>
+
+#include "Rosters.hpp"
+#include "Inferencer.hpp"
+
 
 using namespace std;
 
-enum modes{
+enum SystemModes {
 	textmode,
 	inferencemode,
 	gamemode};
-	
+
 struct Settings{
 	int mode=textmode;
-	string modelpath="";
+	std::string modelpath="";
 	string imgpath="";
 };
 	

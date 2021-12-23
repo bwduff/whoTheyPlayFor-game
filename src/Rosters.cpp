@@ -4,10 +4,9 @@
  * Dec 12 2021
  * LICENSE: GNU GPLv3
  */
-
 #include <string>
-#include <fstream>
 #include <vector>
+#include <fstream>
 #include <utility> // std::pair
 #include <stdexcept> // std::runtime_error
 #include <sstream> // std::stringstream
@@ -15,7 +14,7 @@
 #include <iostream> //std::cout
 
 #include "Rosters.hpp"
- 
+#define TEST_FILENAME "../data/csv/LeagueRosterPullTest.csv"
  //TODO: Find out how to parse CSV from BBRef.com into dictionary
  /*
  No.,Player,Pos,Ht,Wt,Birth Date,,Exp,College
@@ -41,12 +40,15 @@
 
 /*Roster global variable. Used to look up key (player name) and match with team*/
 //I have mixed thoughts on Player / Team class usage, but lets go with this for now.
-unordered_set<string,Team> RosterBook;
+//unordered_set<string,Team> RosterBook;
 
 bool InitRosters(void){
 	 //TODO: Implement by looking up CSV file in data dir.
+     SetRostersFromCSV(TEST_FILENAME);
+     return true;
 }
 
+//TODO: Add error checking & return status
 void SetRostersFromCSV(string filename){
     //RosterBook is global var that we store data in. Encapsulating in class might be better.
 
@@ -63,28 +65,109 @@ void SetRostersFromCSV(string filename){
     //When reading in League CSV, I can set Team name and abbreviation which can be used to find logo too.
     //Lets just return team objects.
     vector<Team> teamList = importTeamsFromCSV(filename);
-
+    
     //OK, now that we have team list we can iterate through and read player names and insert into RosterBook object.
+    int importFailCount=0;
     for(auto& t : teamList){
         //Go through team CSVs and create players. Store players solely in RosterBook
-        if(fillRosterBook(t)){
-            cout << "ERROR! Error encountered when filling roster book with the " << t.name \
+        if(fillRosterBook(&t)){
+            cout << "WARNING! Error encountered when filling roster book with Team: " << t.name \
             << "who has filepath: '" << t.csvPath << "'" << endl;
-        }
-
+            importFailCount++;
+        } else
+            cout << "Team: " << t.name << "imported from: '"<< t.csvPath \
+            << "', with abbreviation " <<  t.abbrev << endl;
     }
-
+    if(importFailCount) cout << "WARNING: Failed to load " << importFailCount \
+    << "teams! Search database will be limited." << endl;
 }
 
-//TODO: Impl
+//TODO: Test
 std::vector<Team> importTeamsFromCSV(std::string filename){
     vector<Team> teams; 
+    //Go through CSV and parse into team objects.
+    //Column format is Team Name, Abbrev, CSV.
+    //Need to write generic csv2string function to enable easy reads of team CSVs + player
+    vector<string> csvContents = csv2String(filename);
+    //Becuase we know by design the table's dimensions are 3xN, we can easily pop values
+    //into team objects
+
+    for(int i=0; i < csvContents.size();i++){
+        if(csvContents[i]!=""){
+            i++;
+            string abbrev = csvContents[i];
+            i++;
+            string teamName = csvContents[i];
+            i++;
+            string csvPath = csvContents[i];
+            teams.push_back(Team(teamName,abbrev,csvPath)); 
+        }
+        
+    }
+
     return teams;
 }
 
 //TODO: Impl
-bool fillRosterBook(Team){
+bool fillRosterBook(Team* t){
+    //Go to team Ccsv2StringSV, read all contents, then parse.
+    //vector<int> columnSelect = {1};
+    //vector<string> csvContents = csv2String(t->csvPath,&columnSelect);
+    
+    //csv will have BBRef format:
+    //0  , 1    , 2 ,3, 4 , 5        ,6,7,8
+    //No.,Player,Pos,Ht,Wt,Birth Date,,Exp,College
+ 
+    //for(int i=0; i < csvContents.size();i++){
+    //   Player* p = new Player(csvContents[i],t);
+       //std::pair<unordered_set<string,Team>::iterator,bool> ret;
+       //ret = RosterBook.insert(p->name,t);
+       //TODO: I'm using a lot of pointers to objects. At what point do I replace this with
+       //objects instead?
+    //}
     return true;
+}
+
+//TODO: implement
+//LEAVING OFF HERE
+//vector<std::string> csv2String(std::string filename, vector<int> cs={}){
+vector<std::string> csv2String(std::string filename){
+    vector<string> result;
+
+    //Creating in file stream
+    std::ifstream file;
+
+
+    // Make sure the file is open
+    file.open(filename.c_str(),std::ifstream::in);
+    //file.open(filename,std::ifstream::in);
+    if(!file.is_open()) throw std::runtime_error("Could not open file");
+
+    //Helper vars
+    std::string line, cellVal;
+    int iVal;
+    char ch;
+    
+    // Read the column names
+    if(file.good()) //TODO: Consider adding error check here?
+    {
+        // Extract the first line in the file
+        std::getline(file, line);
+        //In my case, this will be for reference & title only: To be discarded
+    }
+    // Create a stringstream from lines &
+    // Cycle through each cell
+    while(std::getline(file,line)){
+        std::stringstream ss(line);
+        while(std::getline(ss, cellVal, ',')){
+            
+        // Push back CSV info to string list
+        result.push_back(cellVal);
+        }
+    }
+    // Close file
+    file.close();
+    return result;
 }
 
 //EXTODO: Make Generic with templates just as an exercise.
@@ -122,6 +205,7 @@ std::vector<std::pair<std::string, std::vector<int>>> read_csv(std::string filen
             result.push_back({colname, std::vector<int> {}});
         }
     }
+    
 
     // Read data, line by line
     while(std::getline(myFile, line))

@@ -91,18 +91,19 @@ std::vector<Team> importTeamsFromCSV(std::string filename){
     vector<string> csvContents = csv2String(filename);
     //Becuase we know by design the table's dimensions are 3xN, we can easily pop values
     //into team objects
-
-    for(int i=0; i < csvContents.size();i++){
-        if(csvContents[i]!=""){
-            i++;
-            string abbrev = csvContents[i];
-            i++;
-            string teamName = csvContents[i];
-            i++;
-            string csvPath = csvContents[i];
-            teams.push_back(Team(teamName,abbrev,csvPath)); 
-        }
-        
+    
+    //Vector layout: 
+    //[0] Load team, [1] Abbrev
+    //[2] Team Name, [3] CSV path
+    //Iterate x4
+    for(uint i=0; i < csvContents.size();i+=4){
+            string loadTeam = csvContents[i];
+            string abbrev = csvContents[i+1];
+            string teamName = csvContents[i+2];
+            string csvPath = csvContents[i+3];
+    
+            if (loadTeam != "")
+                teams.push_back(Team(teamName,abbrev,csvPath)); 
     }
 
     return teams;
@@ -128,8 +129,6 @@ bool fillRosterBook(Team* t){
     return true;
 }
 
-//TODO: implement
-//LEAVING OFF HERE
 //vector<std::string> csv2String(std::string filename, vector<int> cs={}){
 vector<std::string> csv2String(std::string filename){
     vector<string> result;
@@ -160,9 +159,10 @@ vector<std::string> csv2String(std::string filename){
     while(std::getline(file,line)){
         std::stringstream ss(line);
         while(std::getline(ss, cellVal, ',')){
-            
+          //TODO: count cols to indxd properly  
         // Push back CSV info to string list
-        result.push_back(cellVal);
+        if(cellVal != "\r")
+            result.push_back(cellVal);
         }
     }
     // Close file

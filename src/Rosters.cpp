@@ -72,7 +72,7 @@ void SetRostersFromCSV(string filename){
         //Go through team CSVs and create players. Store players solely in RosterBook
         if(fillRosterBook(&t)){
             cout << "WARNING! Error encountered when filling roster book with Team: " << t.name \
-            << "who has filepath: '" << t.csvPath << "'" << endl;
+            << " who has filepath: '" << t.csvPath << "'" << endl;
             importFailCount++;
         } else
             cout << "Team: " << t.name << "imported from: '"<< t.csvPath \
@@ -126,6 +126,8 @@ bool fillRosterBook(Team* t){
        //TODO: I'm using a lot of pointers to objects. At what point do I replace this with
        //objects instead?
     //}
+
+
     return true;
 }
 
@@ -144,31 +146,45 @@ vector<std::string> csv2String(std::string filename){
 
     //Helper vars
     std::string line, cellVal;
-    int iVal;
+    int numCols=0;
     char ch;
     
-    // Read the column names
-    if(file.good()) //TODO: Consider adding error check here?
-    {
-        // Extract the first line in the file
-        std::getline(file, line);
-        //In my case, this will be for reference & title only: To be discarded
-    }
+    //Error check
+    if(!file.good()) std::cout << "ERROR! File is corrupted." << std::endl;
+    
+    // Extract the first line in the file
+    std::getline(file, line);
+    // FIles must have a header row with each column filled to be valid, otherwise undefined behavior
+    std::stringstream firstline(line);
+    
     // Create a stringstream from lines &
-    // Cycle through each cell
+    // cycle through each cell to count cols to correct empty last col
+    while(std::getline(firstline,cellVal, ',')){
+        //Calculate numCols 
+        numCols++;
+    }
     while(std::getline(file,line)){
+        //Issue when CSV path (last column) is blank. I could just load marked teams, but I'd like to keep this function generic.
+        //So lets index instead.
         std::stringstream ss(line);
+        int pushedCnt=0;
         while(std::getline(ss, cellVal, ',')){
-          //TODO: count cols to indxd properly  
-        // Push back CSV info to string list
-        if(cellVal != "\r")
-            result.push_back(cellVal);
+           //Push values until we exit loop.
+           result.push_back(cellVal);
+           pushedCnt++;
+        } 
+        //End of line reached. Was last col empty?
+        if(pushedCnt!=numCols){
+            //Last col empty, makeup difference
+            result.push_back("");
         }
     }
     // Close file
     file.close();
     return result;
 }
+
+
 
 //EXTODO: Make Generic with templates just as an exercise.
 /*Example function for reading CSV*/

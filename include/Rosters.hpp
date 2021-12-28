@@ -54,6 +54,8 @@ std::vector<Team> importTeamsFromCSV(std::string filename);
 
 bool fillRosterBook(Team*);
 
+Player* QueryPlayerName(std::string qStr);
+
 vector<string> csv2String(std::string filename, unordered_set<int> cs = {});
 
 #endif // ROSTERS_HPP

@@ -59,7 +59,18 @@ int main(int argc, char* argv[])
 	while(1){ //Main loop
 		//Query user, depending on mode, for either text query or image file for inferencer.
 		if(s.mode==textmode){
+			std::string queryStr;
 			cout << "Enter player name to look up: " << endl;
+			std::getline(cin,queryStr);
+
+			Player* res = QueryPlayerName(queryStr);
+			if(res==nullptr){
+				cout << "Player: "<< queryStr << "not found!!" << endl;
+			}else{
+				cout << "Player: " << queryStr << " FOUND." <<endl;
+				
+			}
+			
 		}else if(s.mode==inferencemode){
 			
 		}

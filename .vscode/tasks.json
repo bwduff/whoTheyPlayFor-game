@@ -10,7 +10,7 @@
 				"-g",
 				"${workspaceFolder}/src/*.cpp", //was originally *just* "${file}"
 				"-o",
-				"${fileDirname}/${fileBasenameNoExtension}",
+				"${fileDirname}/WTPF.out",
 				"-I${workspaceFolder}/include"
 			],
 			"options": {

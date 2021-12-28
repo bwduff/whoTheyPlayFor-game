@@ -130,6 +130,12 @@ bool fillRosterBook(Team* t){
     return true;
 }
 
+Player* QueryPlayerName(std::string qStr){
+    auto it = RosterBook.find(qStr);
+    Player* p = it->second;
+    if(it == RosterBook.end()) p = nullptr;
+    return p;
+}
 vector<std::string> csv2String(std::string filename, unordered_set<int> cs){
     vector<string> result;
     bool exportAllCols = true;

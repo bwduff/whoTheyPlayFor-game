@@ -71,12 +71,12 @@ void SetRostersFromCSV(string filename){
     int importFailCount=0;
     for(auto& t : teamList){
         //Go through team CSVs and create players. Store players solely in RosterBook
-        if(fillRosterBook(&t)){
+        if(!fillRosterBook(&t)){
             cout << "WARNING! Error encountered when filling roster book with Team: " << t.name \
             << " who has filepath: '" << t.csvPath << "'" << endl;
             importFailCount++;
         } else
-            cout << "Team: " << t.name << "imported from: '"<< t.csvPath \
+            cout << "Team: " << t.name << " imported from: '"<< t.csvPath \
             << "', with abbreviation " <<  t.abbrev << endl;
     }
     if(importFailCount) cout << "WARNING: Failed to load " << importFailCount \

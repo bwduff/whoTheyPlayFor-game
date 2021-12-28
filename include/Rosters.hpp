@@ -9,6 +9,7 @@
 
 #include <string>
 #include <vector>
+#include <unordered_set>
 
 using namespace std; //I don't love doing this but it will make cpp easier to read
 
@@ -53,9 +54,6 @@ std::vector<Team> importTeamsFromCSV(std::string filename);
 
 bool fillRosterBook(Team*);
 
-vector<string> csv2String(std::string filename);
-
-//Overloaded version with arr[] specified columns to extract
-//vector<string> csv2String(std::string filename, vector<int>* cs);
+vector<string> csv2String(std::string filename, unordered_set<int> cs = {});
 
 #endif // ROSTERS_HPP

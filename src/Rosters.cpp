@@ -112,8 +112,8 @@ std::vector<Team> importTeamsFromCSV(std::string filename){
 //TODO: Impl
 bool fillRosterBook(Team* t){
     //Go to team Ccsv2StringSV, read all contents, then parse.
-    //vector<int> columnSelect = {1};
-    //vector<string> csvContents = csv2String(t->csvPath,&columnSelect);
+    unordered_set<int> columnSelect = {1};
+    vector<string> csvContents = csv2String(t->csvPath,columnSelect);
     
     //csv will have BBRef format:
     //0  , 1    , 2 ,3, 4 , 5        ,6,7,8
@@ -131,10 +131,10 @@ bool fillRosterBook(Team* t){
     return true;
 }
 
-//vector<std::string> csv2String(std::string filename, vector<int> cs={}){
-vector<std::string> csv2String(std::string filename){
+vector<std::string> csv2String(std::string filename, unordered_set<int> cs){
     vector<string> result;
-
+    bool exportAllCols = true;
+    
     //Creating in file stream
     std::ifstream file;
 
@@ -163,21 +163,50 @@ vector<std::string> csv2String(std::string filename){
         //Calculate numCols 
         numCols++;
     }
+    //Check Col Select vector before proceeding. If CS > numCols return error.
+    if(cs.size()){
+      //null means report all columns
+      //Technically i have to check each entry of CS
+      exportAllCols = false;
+      for(auto& i : cs){
+          if(i>numCols){
+              exit(-1);
+          } //otherwise, valid selection
+          //how to use any of this to select?
+      }
+    }
+
     while(std::getline(file,line)){
         //Issue when CSV path (last column) is blank. I could just load marked teams, but I'd like to keep this function generic.
         //So lets index instead.
         std::stringstream ss(line);
-        int pushedCnt=0;
+        int colIdx=0;
         while(std::getline(ss, cellVal, ',')){
-           //Push values until we exit loop.
-           result.push_back(cellVal);
-           pushedCnt++;
+            //Push values suntil we exit loop.
+            //Check col ID vs CS and optionally push back
+            //if export all cols, then we don't do find and push regardless
+            //otherwise, find col
+            int pushedCnt=0;
+            if(exportAllCols){
+               result.push_back(cellVal);
+               pushedCnt++;
+            }else{
+               if(cs.find(colIdx)!=cs.end()){
+                   result.push_back(cellVal);
+                   pushedCnt++;
+               }
+            }
+            colIdx++;
         } 
-        //End of line reached. Was last col empty?
-        if(pushedCnt!=numCols){
-            //Last col empty, makeup difference
+        if(exportAllCols){
+            if(colIdx!=numCols) result.push_back("");
+            //Takes care of empty last columns being lost 
+        }
+        else if((colIdx != numCols)&&(cs.find(numCols)!=cs.end())){
+            //Blank cell at end of row is explicitly requested.
             result.push_back("");
         }
+            
     }
     // Close file
     file.close();

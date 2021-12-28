@@ -11,6 +11,7 @@
 #include <stdexcept> // std::runtime_error
 #include <sstream> // std::stringstream
 #include <unordered_set> //RosterBook
+#include <unordered_map> //Rosterbook
 #include <iostream> //std::cout
 
 #include "Rosters.hpp"
@@ -40,7 +41,7 @@
 
 /*Roster global variable. Used to look up key (player name) and match with team*/
 //I have mixed thoughts on Player / Team class usage, but lets go with this for now.
-//unordered_set<string,Team> RosterBook;
+unordered_map<string,Player*> RosterBook;
 
 bool InitRosters(void){
 	 //TODO: Implement by looking up CSV file in data dir.
@@ -82,7 +83,6 @@ void SetRostersFromCSV(string filename){
     << "teams! Search database will be limited." << endl;
 }
 
-//TODO: Test
 std::vector<Team> importTeamsFromCSV(std::string filename){
     vector<Team> teams; 
     //Go through CSV and parse into team objects.
@@ -109,7 +109,6 @@ std::vector<Team> importTeamsFromCSV(std::string filename){
     return teams;
 }
 
-//TODO: Impl
 bool fillRosterBook(Team* t){
     //Go to team Ccsv2StringSV, read all contents, then parse.
     unordered_set<int> columnSelect = {1};
@@ -119,14 +118,14 @@ bool fillRosterBook(Team* t){
     //0  , 1    , 2 ,3, 4 , 5        ,6,7,8
     //No.,Player,Pos,Ht,Wt,Birth Date,,Exp,College
  
-    //for(int i=0; i < csvContents.size();i++){
-    //   Player* p = new Player(csvContents[i],t);
-       //std::pair<unordered_set<string,Team>::iterator,bool> ret;
-       //ret = RosterBook.insert(p->name,t);
-       //TODO: I'm using a lot of pointers to objects. At what point do I replace this with
-       //objects instead?
-    //}
-
+    for(int i=0; i < csvContents.size();i++){
+       Player* p = new Player(csvContents[i],t);
+       
+       auto ret = RosterBook.insert(std::pair<string,Player*>(p->name,p));
+       if(!ret.second){
+           cout << "WARNING! Player add to roster book reporting errors." << endl;
+       }
+    }
 
     return true;
 }
@@ -137,7 +136,6 @@ vector<std::string> csv2String(std::string filename, unordered_set<int> cs){
     
     //Creating in file stream
     std::ifstream file;
-
 
     // Make sure the file is open
     file.open(filename.c_str(),std::ifstream::in);
@@ -212,8 +210,6 @@ vector<std::string> csv2String(std::string filename, unordered_set<int> cs){
     file.close();
     return result;
 }
-
-
 
 //EXTODO: Make Generic with templates just as an exercise.
 /*Example function for reading CSV*/

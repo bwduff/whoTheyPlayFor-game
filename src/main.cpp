@@ -16,9 +16,10 @@
 using namespace std;
 
 enum SystemModes {
-	textmode,
-	inferencemode,
-	gamemode};
+	textmode, //REFERENCE MODE. Used to pull player information and test roster data.
+	usertextquizmode, //GAME MODE. User is quizzed on players.
+	inferencetestmode, //REFERENCE MODE. Used to test DNN model directly with user control.
+	gamemode}; //GAME MODE. User is quizzed on players--possibly vs computer--with full graphical output and sound.
 
 struct Settings{
 	int mode=textmode;
@@ -40,7 +41,7 @@ int main(int argc, char* argv[])
 	
 	if(argc > 1){ // I.e. it has options
 	//Set mode and path accordingly.
-	//TODO: Parse options
+	//FT-TODO: Parse options
 	}
 	//Otherwise, proceed.
 	
@@ -49,7 +50,7 @@ int main(int argc, char* argv[])
 		cout << "CRITICAL ERROR! Roster initialization FAILED. Exiting..." << endl;
 		exit(-1);
 	}
-	if(s.mode==inferencemode){
+	if(s.mode==inferencetestmode){
 		if(!InitInferencer()){
 			cout << "CRITICAL ERROR! Inference system initialization FAILED. Exiting..." << endl;
 			exit(-1);
@@ -65,16 +66,30 @@ int main(int argc, char* argv[])
 
 			Player* res = QueryPlayerName(queryStr);
 			if(res==nullptr){
-				cout << "Player: "<< queryStr << "not found!!" << endl;
+				cout << "PLAYER: "<< queryStr << "not found!!" << endl;
 			}else{
-				cout << "Player: " << queryStr << " FOUND." <<endl;
-				cout << "They play for the " << res->team->name << "." endl;
+				cout << "PLAYER: " << queryStr << " FOUND." <<endl;
+				cout << "INFO: " << res->name << "plays for the " << res->team->name << "." << std::endl;
 			}
-			
-		}else if(s.mode==inferencemode){
-			
+		}else if(s.mode==usertextquizmode){
+			cout << "Beginning user quiz mode! GAME ON!!" << endl;
+			//Game flow should go: Pick random member of RosterBook and quiz player or DNN model on it.
+			//Abstract the game flow such that we can use same functions with different inputs regardless of mode.
+
+		}else if(s.mode==inferencetestmode){
+			cout << "Launching inference test mode..." << endl;	
+			//Inference test mode has following flow:
+			//1. User provides keyed input naming a player who has test image sets in some ${DATA_DIR}
+			//2. Keyed input is used with QueryPlayerName to retrieve test set location,
+			// these images will be used to calculate accuracy of a given model for a given player.
+			//3. The images are run through inferencer along with label information. Error tracking will be reported.
+		}else{ // GAME MODE, default condition
+			//But also most feature filled, so will be last to implement.
 		}
-		//TODO: Investigate if cleanup on key-quit is worthwhile?
+			
+
+		}
+		//BKMP-TODO: Investigate if cleanup on key-quit is worthwhile?
 	}
   
     return 0;

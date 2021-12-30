@@ -119,7 +119,7 @@ bool fillRosterBook(Team* t){
     //No.,Player,Pos,Ht,Wt,Birth Date,,Exp,College
  
     for(int i=0; i < csvContents.size();i++){
-       /*TODO: Currently player constructor creates new instance of "Team" object for each player.
+       /*OPT-TODO: Currently player constructor creates new instance of "Team" object for each player.
        This means that for 30 teams, We waste approximately 30*11 Team objects, which are not super trivial with potentially long characters. 
        As teams objects grow richer, we will want to replace this method by having the rosterbook manage all player and team objects alike.
        */

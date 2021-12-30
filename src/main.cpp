@@ -68,7 +68,7 @@ int main(int argc, char* argv[])
 				cout << "Player: "<< queryStr << "not found!!" << endl;
 			}else{
 				cout << "Player: " << queryStr << " FOUND." <<endl;
-				cout << "They play for the " << res->team->name << endl;
+				cout << "They play for the " << res->team->name << "." endl;
 			}
 			
 		}else if(s.mode==inferencemode){

@@ -43,7 +43,7 @@ class Player{
 
     Player(std::string Name, Team* t){
         this->name = Name;
-        this->team = t;
+        this->team = new Team(t->name,t->abbrev,t->csvPath);
     }
 };
 

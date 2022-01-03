@@ -56,6 +56,8 @@ bool fillRosterBook(Team*);
 
 Player* QueryPlayerName(std::string qStr);
 
+Player* GetRandomPlayer(void);
+
 vector<string> csv2String(std::string filename, unordered_set<int> cs = {});
 
 #endif // ROSTERS_HPP

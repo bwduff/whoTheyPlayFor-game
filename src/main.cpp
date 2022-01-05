@@ -78,6 +78,7 @@ int main(int argc, char* argv[]){
 			//cout << "Beginning user quiz mode! GAME ON!!" << endl;
 			//Game flow should go: Pick random member of RosterBook and quiz player or DNN model on it.
 			//Abstract the game flow such that we can use same functions with different inputs regardless of mode.
+			std::cout << endl; 
 
 			std::string usrAnsStr;
 			Player* p = GetRandomPlayer();
@@ -94,7 +95,8 @@ int main(int argc, char* argv[]){
 					cout << "Correct!! That is " << n_correct << " good answers from you! " << endl;
 				}else{
 					n_incorrect++;
-					cout << "Sorry, that's wrong!" << "You now have " << n_incorrect << " wrong answers and " << n_correct << " right answers" << endl;
+					cout << "Sorry, that's wrong! They play for the " << p->team->name << endl; 
+					cout << "You now have " << n_incorrect << " wrong answers and " << n_correct << " right answers" << endl;
 				}
 			}
 		}else if(s.mode==inferencetestmode){

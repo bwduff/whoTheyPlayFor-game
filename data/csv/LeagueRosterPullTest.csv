@@ -1,9 +1,9 @@
 Load team,Col 1: Abbrev,Col 2: Team Name,Col 3: TeamRosterCSV-path
-,ATL,Atlanta Hawks,testPathForATL
-,BKN,Brooklyn Nets,testPathforBKN
-,BOS,Boston Celtics,
-,CHA,Charlotte Hornets,TestCHA
-,CHI,Chicago Bulls,
+x,ATL,Atlanta Hawks,../data/csv/ATL.csv
+x,BKN,Brooklyn Nets,../data/csv/BKN.csv
+x,BOS,Boston Celtics,../data/csv/BOS.csv
+x,CHA,Charlotte Hornets,../data/csv/CHA.csv
+x,CHI,Chicago Bulls,../data/csv/CHI.csv
 ,CLE,Cleveland Cavaliers,
 ,DAL,Dallas Mavericks,
 ,DEN,Denver Nuggets,

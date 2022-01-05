@@ -87,17 +87,21 @@ int main(int argc, char* argv[]){
 				exit(-1);
 			}else{
 				n_asked++;
-				cout << "Question #"<< n_asked << ": What team does: " << p->name << " play for?" << endl;
+				cout << "Question #"<< n_asked << ": What team does " << p->name << " play for?" << endl;
 				//TODO: Add support for acronyms too, and whitespace elimination
 				std::getline(cin,usrAnsStr);
 				if(usrAnsStr == p->team->name){ 
 					n_correct++; 
-					cout << "Correct!! That is " << n_correct << " good answers from you! " << endl;
+					cout << "Correct!! You now have " << n_correct << " right and " << n_incorrect << " wrong." << endl;
 				}else{
 					n_incorrect++;
 					cout << "Sorry, that's wrong! They play for the " << p->team->name << endl; 
 					cout << "You now have " << n_incorrect << " wrong answers and " << n_correct << " right answers" << endl;
 				}
+			}
+			if(n_incorrect + 1 > 2*n_correct + 1){
+				cout << "" << endl;
+				cout << "...Maybe you should practice more :/" << endl;
 			}
 		}else if(s.mode==inferencetestmode){
 			cout << "Launching inference test mode..." << endl;	

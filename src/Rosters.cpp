@@ -148,6 +148,7 @@ Player* GetRandomPlayer(void){
 
     //Next advance this by some pseudorandom value. We don't need it to be truly random (it's a game), and duplicates are likely.
     //Would be nice to add a recently used tracker at a higher level to avoid too many duplicates.
+    srand(time(NULL));
     std::advance(it, rand() % RosterBook.size()); //Advance by a random, but smaller amount than the size of the book
 
     //Check if player retrieved, return player obj if so.

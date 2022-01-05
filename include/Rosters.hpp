@@ -36,6 +36,9 @@ class Player{
     std::string name;
     //TODO: Add picture
     //TODO: Add pronoun attrib to correctly refer to players
+    //TODO: Somehow, think of way to rate/rank obscurity of player, so that we can add difficulty level. 
+    //      Total games played seems like a statistic that could at least be useful to distinguish vets from rookies, which usually correlates with name recognition.
+    //      If rosters are imported between seasons (as is spirit of the game), then we can use Team's Per game table to get Games Played (GP) for each player.
     Team* team;
 
     Player(){

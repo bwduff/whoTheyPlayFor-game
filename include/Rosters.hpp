@@ -18,7 +18,7 @@ class Team{
     std::string name;
     std::string abbrev;
     std::string csvPath;
-    //TODO: add team logo
+    //TODO: Add team logo
 
     Team(){
         
@@ -35,6 +35,7 @@ class Player{
     public: //Can eval privilege later
     std::string name;
     //TODO: Add picture
+    //TODO: Add pronoun attrib to correctly refer to players
     Team* team;
 
     Player(){

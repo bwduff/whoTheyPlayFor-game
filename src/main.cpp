@@ -89,6 +89,7 @@ int main(int argc, char* argv[]){
 				n_asked++;
 				cout << "Question #"<< n_asked << ": What team does " << p->name << " play for?" << endl;
 				//TODO: Add support for acronyms too, and whitespace elimination
+				//TODO: This is pretty messy, lets abstract this somehow.
 				std::getline(cin,usrAnsStr);
 				if(usrAnsStr == p->team->name){ 
 					n_correct++; 
